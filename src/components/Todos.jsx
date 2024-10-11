@@ -39,7 +39,6 @@ function reducer(state, action) {
     }
 }
 
-
 const initialState = {
     todos: [],
     likedlist: [],
@@ -49,17 +48,17 @@ function Todos() {
     const [data, dispatch] = useReducer(reducer, initialState);
     const [editId, setEditId] = useState(null);
     const [editValue, setEditValue] = useState('');
-    const [newTodo, setNewTodo] = useState(''); 
+    const [newTodo, setNewTodo] = useState('');
 
     function handleSubmit(e) {
         e.preventDefault();
         if (newTodo.trim()) {
             const newValue = {
-                id: Date.now(), 
+                id: Date.now(),
                 value: newTodo,
             };
             dispatch({ type: CREATE_TODO, payload: newValue });
-            setNewTodo(''); 
+            setNewTodo('');
         }
     }
 
@@ -77,49 +76,87 @@ function Todos() {
     }
 
     return (
-        <>
-            <form onSubmit={handleSubmit} className='w-[500px] mx-auto flex items-center justify-between bg-white p-5 rounded-md mt-10'>
+        <div className="bg-gradient-to-r from-blue-400 to-purple-500 min-h-screen flex flex-col items-center py-10">
+            <form
+                onSubmit={handleSubmit}
+                className="w-full max-w-lg bg-white shadow-lg p-6 rounded-lg flex items-center justify-between mb-6"
+            >
                 <Input
                     value={newTodo}
                     onChange={(e) => setNewTodo(e.target.value)}
-                    className='w-[80%]'
-                    placeholder='Add Todo'
-                    size='large'
+                    className="w-[70%] mr-4"
+                    placeholder="Add a new task"
+                    size="large"
                     allowClear
+                    style={{
+                        borderRadius: '30px',
+                        borderColor: '#40a9ff',
+                    }}
                 />
-                <Button htmlType='submit' type='primary' size='large'>Submit</Button>
+                <Button
+                    htmlType="submit"
+                    type="primary"
+                    size="large"
+                    style={{
+                        backgroundColor: '#1890ff',
+                        borderColor: '#1890ff',
+                        borderRadius: '30px',
+                    }}
+                >
+                    Add Task
+                </Button>
             </form>
-            <ul className='w-[500px] mx-auto bg-white p-5 rounded-md mt-5'>
+            <ul className="w-full max-w-lg">
                 {data.todos.map((item, index) => (
-                    <li className='p-2 rounded-md flex items-center justify-between bg-slate-400' key={item.id}>
-                        <div>
+                    <li
+                        key={item.id}
+                        className="bg-white shadow-md p-4 rounded-lg flex items-center justify-between mb-4 hover:shadow-lg transition-shadow duration-300 ease-in-out"
+                    >
+                        <div className="flex-1 text-lg font-semibold text-gray-800">
                             {editId === item.id ? (
                                 <Input
                                     value={editValue}
                                     onChange={(e) => setEditValue(e.target.value)}
-                                    className='w-[80%]'
+                                    className="w-full"
+                                    style={{ borderRadius: '30px', borderColor: '#40a9ff' }}
                                 />
                             ) : (
-                                `${index + 1}. ${item.value}`
+                                <span>{`${index + 1}. ${item.value}`}</span>
                             )}
                         </div>
-                        <div className='flex items-center gap-5'>
-                            <button onClick={() => dispatch({ type: LIKE_TODO, payload: item })}>
+                        <div className="flex items-center gap-4">
+                            <button
+                                onClick={() => dispatch({ type: LIKE_TODO, payload: item })}
+                                className="text-red-500 hover:text-red-600 transition-colors"
+                                aria-label="Like"
+                            >
                                 {data.likedlist.some(likedItem => likedItem.id === item.id) ? (
-                                    <HeartFilled style={{ color: 'red' }} />
+                                    <HeartFilled />
                                 ) : (
                                     <HeartOutlined />
                                 )}
                             </button>
-                            <button onClick={() => dispatch({ type: DELETE_TODO, payload: item.id })}>
+                            <button
+                                onClick={() => dispatch({ type: DELETE_TODO, payload: item.id })}
+                                className="text-gray-600 hover:text-gray-800 transition-colors"
+                                aria-label="Delete"
+                            >
                                 <DeleteOutlined />
                             </button>
                             {editId === item.id ? (
-                                <button onClick={() => handleSave(item)}>
-                                    <SaveOutlined style={{ color: 'green' }} />
+                                <button
+                                    onClick={() => handleSave(item)}
+                                    className="text-green-500 hover:text-green-600 transition-colors"
+                                    aria-label="Save"
+                                >
+                                    <SaveOutlined />
                                 </button>
                             ) : (
-                                <button onClick={() => handleEdit(item)}>
+                                <button
+                                    onClick={() => handleEdit(item)}
+                                    className="text-blue-500 hover:text-blue-600 transition-colors"
+                                    aria-label="Edit"
+                                >
                                     <EditOutlined />
                                 </button>
                             )}
@@ -127,7 +164,7 @@ function Todos() {
                     </li>
                 ))}
             </ul>
-        </>
+        </div>
     );
 }
 
